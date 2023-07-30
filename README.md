@@ -3,6 +3,5 @@ Project for TeleWorkPH C++ Programming Training
 
 Collaborators
 
-Christian Aaron Gonzales
-
+Christian Aaron Gonzales /
 Nathaniel Delacruz
