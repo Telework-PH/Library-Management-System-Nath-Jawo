@@ -1,0 +1,20 @@
+Design Decisions
+
+The design of the library management system was based on the following principles:
+
+Ease of use: The system should be easy to use for both librarians and library users.
+Flexibility: The system should be flexible enough to accommodate the needs of different libraries.
+Scalability: The system should be scalable to accommodate the growth of a library's collection.
+
+The following were some of the challenges encountered during the project:
+
+Data migration: The system required the migration of data from the library's existing manual system. 
+This was a challenging task, as the data was not always in a consistent format.
+Testing: The system was thoroughly tested to ensure that it was working properly. This included both unit testing and integration testing.
+Conclusion
+
+During the development of our Library Management System, we faced several challenges that tested our problem-solving skills and teamwork. 
+One of the biggest challenges was designing an efficient algorithm for searching and updating book records in the database.
+To overcome this challenge, we researched various algorithms and data structures and implemented a hash table-based solution that significantly improved the performance of the system. 
+Another challenge we faced was ensuring the security of the system and protecting the data of the library and its patrons. 
+We implemented several security measures such as encryption of sensitive data and user authentication to address this challenge.
