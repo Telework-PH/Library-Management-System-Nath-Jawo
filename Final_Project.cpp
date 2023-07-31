@@ -4,6 +4,14 @@
 #include <algorithm>
 using namespace std;
 
+// Function to validate the username and password
+bool isValidLogin(const string& username, const string& password) {
+    // Replace the following hardcoded credentials with your desired username and password
+    const string validUsername = "admin";
+    const string validPassword = "admin";
+    return (username == validUsername && password == validPassword);
+}
+
 // Book class definition
 class Book {
 public:
@@ -20,7 +28,6 @@ public:
               publisher(move(p)), available(avail) {}
 };
 
-
 // Patron class definition
 class Patron {
 public:
@@ -34,7 +41,6 @@ public:
             : patronId(move(id)), name(move(n)), contact(move(c)) {}
 };
 
-
 // Library class definition
 class Library {
 private:
@@ -42,7 +48,6 @@ private:
     vector<Patron> patrons;   // A vector to store the list of patrons or library members
 
 public:
-    // Member functions to interact with the library's books
 
     // Function to add a new book to the library's collection
     void addBook();
@@ -109,14 +114,13 @@ void Library::addBook() {
     cout << "Enter Book ID: ";
     cin >> bookId;
 
-    // Check if the book ID already exists in the library
-    for (const auto& book : books) {
-        if (book.bookId == bookId) {
+    // Check if the book ID already exists in the library using a traditional for loop
+    for (size_t i = 0; i < books.size(); i++) {
+        if (books[i].bookId == bookId) {
             cout << "A book with this ID already exists." << endl;
             return; // Exit the function if the book ID is already present
         }
     }
-
     // Clear any leftover newline character from the previous input
     cin.ignore();
 
@@ -148,9 +152,8 @@ void Library::addBook() {
 
 void Library::searchBook() {
     // Declare a variable to store the search term entered by the user
-
     string searchTerm;
-
+    
     cout << "-------------------------------------------------" << endl;
     cout << "                    SEARCH BOOK                  " << endl;
     cout << "-------------------------------------------------" << endl;
@@ -162,8 +165,9 @@ void Library::searchBook() {
     // Create a vector to store the search results
     vector<Book> searchResults;
 
-    // Search for the book by ID, title, or author
-    for (const auto& book : books) {
+    // Search for the book by ID, title, or author using a traditional for loop
+    for (size_t i = 0; i < books.size(); i++) {
+        const Book& book = books[i];
         if (book.bookId == searchTerm || book.title == searchTerm || book.author == searchTerm) {
             // If the book matches the search term, add it to the searchResults vector
             searchResults.push_back(book);
@@ -220,6 +224,7 @@ void Library::searchBook() {
 void Library::updateBook() {
     // Declare variables to store book information
     string bookId, title, author, publisher;
+    
     cout << "-------------------------------------------------" << endl;
     cout << "                    UPDATE BOOK                  " << endl;
     cout << "-------------------------------------------------" << endl;
@@ -228,15 +233,19 @@ void Library::updateBook() {
     cin.ignore();
     getline(cin, bookId);
 
-    // Find the book with the given ID
-    auto bookToUpdate = find_if(books.begin(), books.end(), [&bookId](const Book& book) {
-        return book.bookId == bookId;
-    });
+     // Find the book with the given ID using a traditional for loop
+    vector<Book>::iterator bookToUpdate = books.end(); // Initialize with the end iterator
+    for (vector<Book>::iterator it = books.begin(); it != books.end(); ++it) {
+        if (it->bookId == bookId) {
+            // If the book with the given ID is found, assign the iterator to bookToUpdate
+            bookToUpdate = it;
+            break;
+        }
+    }
 
     // Check if the book with the given ID is found
     if (bookToUpdate != books.end()) {
         // If the book with the given ID is found, ask the user to enter the new details
-
         // Ask the user to enter the new title of the book
         cout << "Enter New Title: ";
         getline(cin, title);
@@ -264,20 +273,25 @@ void Library::updateBook() {
     }
 }
 
-
 void Library::deleteBook() {
     // Declare a variable to store the book ID to delete
     string bookId;
+    
     cout << "-------------------------------------------------" << endl;
     cout << "                    DELETE BOOK                  " << endl;
     cout << "-------------------------------------------------" << endl;
     cout << "Enter Book ID to delete: ";
     cin >> bookId;
 
-    // Find the book with the given ID
-    auto bookToDelete = find_if(books.begin(), books.end(), [&bookId](const Book& book) {
-        return book.bookId == bookId;
-    });
+    // Find the book with the given ID using a traditional for loop
+    vector<Book>::iterator bookToDelete = books.end(); // Initialize with the end iterator
+    for (vector<Book>::iterator it = books.begin(); it != books.end(); ++it) {
+        if (it->bookId == bookId) {
+            // If the book with the given ID is found, assign the iterator to bookToDelete
+            bookToDelete = it;
+            break;
+        }
+    }
 
     // Check if the book with the given ID is found
     if (bookToDelete != books.end()) {
@@ -388,16 +402,16 @@ void Library::addPatron() {
     cout << "Enter Patron ID: ";
     cin >> patronId;
 
-    // Check if the patron ID already exists
-    for (const auto& patron : patrons) {
-        // Compare the entered patron ID with each existing patron's ID in the 'patrons' vector
-        if (patron.patronId == patronId) {
-            // If a patron with the same ID is found, inform the user and return from the function
-            cout << "-------------------------------------------------" << endl;
-            cout << "A patron with this ID already exists." << endl;
-            return;
-        }
+for (size_t i = 0; i < patrons.size(); ++i) {
+    const Patron& patron = patrons[i];
+    // Compare the entered patron ID with each existing patron's ID in the 'patrons' vector
+    if (patron.patronId == patronId) {
+        // If a patron with the same ID is found, inform the user and return from the function
+        cout << "-------------------------------------------------" << endl;
+        cout << "A patron with this ID already exists." << endl;
+        return;
     }
+}
 
     // If the patron ID is unique, proceed to ask for the patron's name and contact details
 
@@ -444,14 +458,15 @@ void Library::searchPatron() {
     // Create a vector to store search results (matched patrons)
     vector<Patron> searchResults;
 
-    // Search for the patron by ID or name
-    for (const auto& patron : patrons) {
-        // Check if the patron's ID or name matches the entered search term
-        if (patron.patronId == searchTerm || patron.name == searchTerm) {
-            // If the patron is found, add it to the searchResults vector
-            searchResults.push_back(patron);
-        }
+// Search for the patron by ID or name using a traditional for loop
+for (size_t i = 0; i < patrons.size(); ++i) {
+    const Patron& patron = patrons[i];
+    // Check if the patron's ID or name matches the entered search term
+    if (patron.patronId == searchTerm || patron.name == searchTerm) {
+        // If the patron is found, add it to the searchResults vector
+        searchResults.push_back(patron);
     }
+}
 
     // Check if any patrons were found based on the search results
     if (searchResults.empty()) {
@@ -492,16 +507,16 @@ void Library::updatePatron() {
     // Create a flag to keep track if the patron with the given ID is found
     bool patronFound = false;
 
-    // Search for the patron by ID and update their details
-    for (auto& patron : patrons) {
-        // Check if the patron's ID matches the entered patronId
-        if (patron.patronId == patronId) {
-            // If the patron with the given ID is found, ask the user to enter the new details
-
+    // Search for the patron by ID and update their details using a for loop
+    for (size_t i = 0; i < patrons.size(); ++i) {
+    Patron& patron = patrons[i];
+    // Check if the patron's ID matches the entered patronId
+    if (patron.patronId == patronId) {
+  
             // Ask the user to enter the new name of the patron
             cout << "Enter New Name: ";
-            cin.ignore(); // Clear any leftover newline character from the previous input
-            getline(cin, name); // Read the entire line of input, including spaces, into the 'name' variable
+            cin.ignore(); 
+            getline(cin, name);
 
             // Check if the entered name is not empty
             if (name.empty()) {
@@ -512,7 +527,7 @@ void Library::updatePatron() {
 
             // Ask the user to enter the new contact details of the patron
             cout << "Enter New Contact Details: ";
-            getline(cin, contact); // Read the entire line of input, including spaces, into the 'contact' variable
+            getline(cin, contact); 
 
             // Check if the entered contact details are not empty
             if (contact.empty()) {
@@ -536,14 +551,12 @@ void Library::updatePatron() {
             break;
         }
     }
-
     // If the patron with the given ID is not found, inform the user
     if (!patronFound) {
         cout << "-------------------------------------------------" << endl;
         cout << "Patron not found." << endl;
     }
 }
-
 
 void Library::deletePatron() {
     // Declare a variable to store the patron ID to be deleted
@@ -565,9 +578,9 @@ void Library::deletePatron() {
     bool patronFound = false;
 
     // Search for the patron by ID and delete them
-    for (auto it = patrons.begin(); it != patrons.end(); ++it) {
-        // Check if the patron's ID matches the entered patronId
-        if (it->patronId == patronId) {
+    for (std::vector<Patron>::iterator it = patrons.begin(); it != patrons.end(); ++it) {
+    // Check if the patron's ID matches the entered patronId
+    if (it->patronId == patronId) {
             // If the patron with the given ID is found, remove them from the 'patrons' vector
             patrons.erase(it);
             // Notify the user that the patron has been successfully deleted
@@ -604,8 +617,8 @@ void Library::displayAllPatrons() {
         cout << "All Patrons:" << endl;
         cout << "-------------------------------------------------" << endl;
 
-        // Loop through each patron in the 'patrons' vector using a range-based for loop
-        for (const auto& patron : patrons) {
+      for (size_t i = 0; i < patrons.size(); ++i) {
+      const Patron& patron = patrons[i];
             // Display the details of each patron
 
             // Print the patron's ID using 'patron.patronId'
@@ -623,7 +636,6 @@ void Library::displayAllPatrons() {
     }
 }
 
-
 void Library::checkOutBook() {
     // Declare variables to store patron and book IDs
     string patronId, bookId;
@@ -633,24 +645,21 @@ void Library::checkOutBook() {
     // Ask the user to enter the patron ID
     cout << "Enter Patron ID: ";
     cin >> patronId;
-
-
+    
     // Ask the user to enter the book ID
     cout << "Enter Book ID: ";
     cin >> bookId;
     cout << "-------------------------------------------------" << endl;
 
-
     // Create boolean flags to keep track if the patron and book with the given IDs are found
     bool patronFound = false;
     bool bookFound = false;
 
-
-
     // Search for the patron by their ID
-    for (auto& patron : patrons) {
-        // Check if the patron's ID matches the entered patronId
-        if (patron.patronId == patronId) {
+    for (size_t i = 0; i < patrons.size(); ++i) {
+    Patron& patron = patrons[i];
+    // Check if the patron's ID matches the entered patronId
+    if (patron.patronId == patronId) {
             // If the patron with the given ID is found, set the patronFound flag to true
             patronFound = true;
             // Exit the loop since we have already found the patron
@@ -712,9 +721,10 @@ void Library::returnBook() {
     bool bookFound = false;
 
     // Search for the patron and book by their IDs
-    for (auto& patron : patrons) {
-        // Check if the patron's ID matches the entered patronId
-        if (patron.patronId == patronId) {
+    for (size_t i = 0; i < patrons.size(); ++i) {
+    Patron& patron = patrons[i];
+    // Check if the patron's ID matches the entered patronId
+    if (patron.patronId == patronId) {
             // If the patron with the given ID is found, set the patronFound flag to true
             patronFound = true;
             // Exit the loop since we have already found the patron
@@ -722,9 +732,10 @@ void Library::returnBook() {
         }
     }
 
-    for (auto& book : books) {
-        // Check if the book's ID matches the entered bookId
-        if (book.bookId == bookId) {
+   for (size_t i = 0; i < books.size(); ++i) {
+    Book& book = books[i];
+    // Check if the book's ID matches the entered bookId
+    if (book.bookId == bookId) {
             // If the book with the given ID is found, set the bookFound flag to true
             bookFound = true;
             // Check if the book is already returned (i.e., book.available is true)
@@ -768,17 +779,16 @@ void Library::returnBook() {
     }
 }
 
-
 void Library::displayAllCheckouts() {
 
     cout << "-------------------------------------------------" << endl;
-    cout << "              DISPPLAY ALL CHECKOUTS             " << endl;
+    cout << "              DISPLAY ALL CHECKOUTS             " << endl;
     cout << "-------------------------------------------------" << endl;
     // Create a vector to store checked-out books
     vector<Book> checkedOutBooks;
 
-    // Find all checked-out books by iterating through the 'books' vector
-    for (const auto& book : books) {
+     for (size_t i = 0; i < books.size(); ++i) {
+     const Book& book = books[i];
         // Check if the book is not available (i.e., checked out)
         if (!book.available) {
             // If the book is checked out, add it to the 'checkedOutBooks' vector
@@ -793,7 +803,8 @@ void Library::displayAllCheckouts() {
     } else {
         // If there are checked-out books, display them
         cout << "Checked-out Books:" << endl;
-        for (const auto& book : checkedOutBooks) {
+        for (size_t i = 0; i < checkedOutBooks.size(); ++i) {
+        const Book& book = checkedOutBooks[i];
             // Display information for each checked-out book
             cout << "Book ID: " << book.bookId << endl;
             cout << "Title: " << book.title << endl;
@@ -803,7 +814,6 @@ void Library::displayAllCheckouts() {
         }
     }
 }
-
 
 void Library::saveDataToFile() {
     cout << "-------------------------------------------------" << endl;
@@ -824,7 +834,8 @@ void Library::saveDataToFile() {
         }
 
         // Save patrons data to the file
-        for (const auto& patron : patrons) {
+        for (size_t i = 0; i < patrons.size(); ++i) {
+        const Patron& patron = patrons[i];
             // Write each patron's data in a comma-separated format to the file
             // The format is: "Patron,patronId,name,contact"
             // Each piece of data is separated by a comma, and a new line is added after each patron's data
@@ -898,30 +909,48 @@ void Library::loadDataFromFile() {
     }
 }
 
-
 int main() {
+    
+        string username, password;
+
+    // Ask for the username and password
+    cout << "Login to Library Management System" << endl;
+    cout << "Username: ";
+    cin >> username;
+    cout << "Password: ";
+    cin >> password;
+
+    if (!isValidLogin(username, password)) {
+        cout << "Invalid login credentials. Exiting Library Management System." << endl;
+        return 0;
+    }
+    
     Library library;
-
     library.loadDataFromFile();
-
     int choice;
-
+	cout << "          __...--~~~~~-._   _.-~~~~~--...__           "<< endl;
+    cout << "        //               `V'               \\\\       "<< endl;
+    cout << "       //      JAWO       |      NATH       \\\\      "<< endl;
+    cout << "      //__...--~~~~~~-._  |  _.-~~~~~~--...__\\\\     "<< endl;
+    cout << "     //__.....----~~~~._\\ | /_.~~~~----.....__\\\\   "<< endl;
+    cout << "    ====================\\\\|//====================   "<< endl;
+    cout << "                        `---`                         " << endl;
 
     do {
-        cout << "*************************************************" << endl;
-        cout << "*                                               *" << endl;
-        cout << "*          Library Management System            *" << endl;
-        cout << "*                                               *" << endl;
-        cout << "*************************************************" << endl;
 
-        cout << "[1]. Add Book         " << "       [9]. Delete Patron" << endl;
-        cout << "[2]. Search Book      " << "       [10]. Display All Patrons" << endl;
-        cout << "[3]. Update Book      " << "       [11]. Check-out Book" << endl;
-        cout << "[4]. Delete Book      " << "       [12]. Return Book" << endl;
-        cout << "[5]. Display All Books" << "       [13]. Display All Check-outs" << endl;
-        cout << "[6]. Add Patron       " << "       [14]. Save Data to File" << endl;
-        cout << "[7]. Search Patron    " << "       [0]. Exit" << endl;
-        cout << "[8]. Update Patron    " << endl;
+
+        cout << " -------------------------------------------------" << endl;
+        cout << "|           Library Management System             |"<< endl;
+        cout << " -------------------------------------------------" << endl;
+
+        cout << "  [1]. Add Book         " << "       [9].  Delete Patron" << endl;
+        cout << "  [2]. Search Book      " << "       [10]. Display All Patrons" << endl;
+        cout << "  [3]. Update Book      " << "       [11]. Check-out Book" << endl;
+        cout << "  [4]. Delete Book      " << "       [12]. Return Book" << endl;
+        cout << "  [5]. Display All Books" << "       [13]. Display All Check-outs" << endl;
+        cout << "  [6]. Add Patron       " << "       [14]. Save Data to File" << endl;
+        cout << "  [7]. Search Patron    " << "       [0].  Exit" << endl;
+        cout << "  [8]. Update Patron    " << endl;
 
 
         cout << "\nEnter your choice: ";
@@ -996,7 +1025,7 @@ int main() {
                 break;
         }
 
-// Continue the loop until the user enters 0 (Exit)
+   // Continue the loop until the user enters 0 (Exit)
     } while (choice != 0);
 
     return 0;
