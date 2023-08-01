@@ -2,15 +2,29 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <conio.h>
 using namespace std;
 
-// Function to validate the username and password
+// Function to check if login is valid (Replace this with your actual implementation)
 bool isValidLogin(const string& username, const string& password) {
-    // Replace the following hardcoded credentials with your desired username and password
-    const string validUsername = "admin";
-    const string validPassword = "admin";
-    return (username == validUsername && password == validPassword);
+    return username == "admin" && password == "admin";
 }
+
+// Function to clear the screen based on the operating system
+void clearScreen() {
+#ifdef _WIN32
+    system("cls"); // For Windows
+#else
+    system("clear"); // For Unix-based systems
+#endif
+}
+//// Function to validate the username and password
+//bool isValidLogin(const string& username, const string& password) {
+//    // Replace the following hardcoded credentials with your desired username and password
+//    const string validUsername = "admin";
+//    const string validPassword = "admin";
+//    return (username == validUsername && password == validPassword);
+//}
 
 // Book class definition
 class Book {
@@ -101,6 +115,16 @@ public:
     void loadDataFromFile();
 };
 
+// Function to check if a string contains special characters
+bool containsSpecialCharacters(const std::string& str) {
+    for (char ch : str) {
+        if (!std::isalnum(ch) && ch != '_') {
+            return true;
+        }
+    }
+    return false;
+}
+
 
 void Library::addBook() {
     // Declare variables to store book information
@@ -110,8 +134,10 @@ void Library::addBook() {
     cout << "-------------------------------------------------" << endl;
     cout << "                     ADD BOOK                    " << endl;
     cout << "-------------------------------------------------" << endl;
+
     // Ask the user to enter the book ID
     cout << "Enter Book ID: ";
+
     cin >> bookId;
 
     // Check if the book ID already exists in the library using a traditional for loop
@@ -120,6 +146,12 @@ void Library::addBook() {
             cout << "A book with this ID already exists." << endl;
             return; // Exit the function if the book ID is already present
         }
+    }
+
+    // Check if the book ID contains special characters
+    if (containsSpecialCharacters(bookId)) {
+        cout << "Invalid input! " << endl;
+        return;
     }
     // Clear any leftover newline character from the previous input
     cin.ignore();
@@ -398,10 +430,12 @@ void Library::addPatron() {
     cout << "-------------------------------------------------" << endl;
     cout << "                    ADD PATRON                   " << endl;
     cout << "-------------------------------------------------" << endl;
+
     // Ask the user to enter the patron ID
-    cout << "Enter Patron ID: ";
+    cout << "Enter Patron ID:";
     cin >> patronId;
 
+    // Check if the patron ID already exists in the library using a traditional for loop
     for (size_t i = 0; i < patrons.size(); ++i) {
         const Patron& patron = patrons[i];
         // Compare the entered patron ID with each existing patron's ID in the 'patrons' vector
@@ -411,6 +445,12 @@ void Library::addPatron() {
             cout << "A patron with this ID already exists." << endl;
             return;
         }
+    }
+
+    // Check if the patron ID contains special characters
+    if (containsSpecialCharacters(patronId)) {
+        cout << "Invalid input!" << endl;
+        return;
     }
 
     // If the patron ID is unique, proceed to ask for the patron's name and contact details
@@ -806,6 +846,7 @@ void Library::displayAllCheckouts() {
         for (size_t i = 0; i < checkedOutBooks.size(); ++i) {
             const Book& book = checkedOutBooks[i];
             // Display information for each checked-out book
+
             cout << "Book ID: " << book.bookId << endl;
             cout << "Title: " << book.title << endl;
             cout << "Author: " << book.author << endl;
@@ -912,18 +953,45 @@ void Library::loadDataFromFile() {
 int main() {
 
     string username, password;
+
     cout << " -------------------------------------------------" << endl;
-    cout << "|          Library Management System Login       |"<< endl;
+    cout << "|          Library Management System Login       |" << endl;
     cout << " -------------------------------------------------" << endl;
-   do { // Ask for the username and password
-       cout << "                  Username: ";
-       cin >> username;
-       cout << "                  Password: ";
-       cin >> password;
-       if (!isValidLogin(username, password)) {
-           cout << "Invalid login credentials." << endl;
-       }
-   }while(username != "admin" && password!="admin");
+
+    do {
+        cout << "                  Username: ";
+        cin >> username;
+
+        cout << "                  Password: ";
+
+        password = "";
+        char ch;
+        while ((ch = _getch()) != 13) { // Read characters until Enter (ASCII 13) is pressed
+            if (ch == 8) { // Handle backspace (ASCII 8)
+                if (!password.empty()) {
+                    cout << "\b \b"; // Move the cursor back, overwrite with a space, and move back again
+                    password.pop_back();
+                }
+            } else {
+                cout << '*';
+                password.push_back(ch);
+            }
+        }
+        cout << endl;
+
+        if (!isValidLogin(username, password)) {
+            // Clear the screen after showing the error message
+            clearScreen();
+            cout << " -------------------------------------------------" << endl;
+            cout << "|          Library Management System Login       |" << endl;
+            cout << " -------------------------------------------------" << endl;
+            cout << "      Invalid login credentials. Try again." << endl;
+        }
+    } while (username != "admin" || password != "admin");
+
+    // Clear the screen after successful login (optional)
+    clearScreen();
+
 
 //    if (!isValidLogin(username, password)) {
 //        cout << "Invalid login credentials. Exiting Library Management System." << endl;
