@@ -912,11 +912,13 @@ void Library::loadDataFromFile() {
 int main() {
 
     string username, password;
-       cout << "Login to Library Management System" << endl;
+    cout << " -------------------------------------------------" << endl;
+    cout << "|          Library Management System Login       |"<< endl;
+    cout << " -------------------------------------------------" << endl;
    do { // Ask for the username and password
-       cout << "Username: ";
+       cout << "                  Username: ";
        cin >> username;
-       cout << "Password: ";
+       cout << "                  Password: ";
        cin >> password;
        if (!isValidLogin(username, password)) {
            cout << "Invalid login credentials." << endl;
